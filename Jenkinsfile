@@ -7,11 +7,12 @@ pipeline {
                 sh 'echo "Without docekr'
             }
         }
-        
+
         stage('W/ Docker') {
             agent {
                 image: node:18-alpine
             }
+            
             steps {
                 sh 'echo "With docekr"'
             }
