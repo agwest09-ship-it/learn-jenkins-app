@@ -12,7 +12,7 @@ pipeline {
             }
             steps {
                 sh '''
-                    npm install -g netlify-cli
+                    npm install node_module/.bin/netlify-cli
                     netlify --version
                 '''
             }
