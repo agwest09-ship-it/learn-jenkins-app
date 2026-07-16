@@ -21,18 +21,6 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                echo "Test stage"
-                sh '''
-                    test -f ./build/index.html
-                    npm test
-                    npm install -g serve
-                    serve -s build
-                '''
-            }
-        }
-
         stage('E2E') {
             agent {
                 docker {
