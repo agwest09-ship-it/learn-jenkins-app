@@ -13,7 +13,7 @@ pipeline {
             steps {
                 sh '''
                     echo "======= BEFORE BUILD ======="
-                    npm ls -la
+                    ls -la
                     node --version
                     npm --version
                     npm ci  
