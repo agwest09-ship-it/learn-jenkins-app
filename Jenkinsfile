@@ -11,13 +11,11 @@ pipeline {
 
             steps {
                 sh '''
-                    echo "======= BEFORE BUILD ======="
                     ls -la
                     node --version
                     npm --version
                     npm ci  
                     npm run build
-                    echo "======= AFTER BUILD ======="
                     ls -la
                 '''
             }
@@ -40,12 +38,13 @@ pipeline {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.61.0-noble'
                     reuseNode true
+                    arg '-u root:root'
                 }
             }
 
             steps {
                 sh '''
-                    npm install -g serve
+                    npm install serve
                     serve -s build
                     npx playwright test
                 '''
