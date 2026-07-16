@@ -2,21 +2,28 @@ pipeline {
     agent any
 
     stages {
-        stage('W/O Docker') {
+        stage('w/o docker') {
             steps {
-                sh 'echo "Without docekr'
+                sh '''echo "Without docker"
+                    ls -la
+                    touch container-no.txt
+                '''
             }
         }
 
-        stage('W/ Docker') {
+        stage('w/ docker') {
             agent {
-                dokcer {
-                    image: node:18-alpine
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
                 }
             }
-            
             steps {
-                sh 'echo "With docekr"'
+                sh '''
+                    echo "With docker"
+                    ls -la
+                    touch container-yes.txt
+                '''
             }
         }
     }
