@@ -88,9 +88,10 @@ pipeline {
                 sh '''
                     npm install netlify-cli node-jq
                     node_modules/.bin/netlify --version
+                    echo "Site ID: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
-                    ls -la build
-                    node_modules/.bin/netlify deploy --dir=build
+                    node_modules/.bin/netlify deploy --dir=build --no-build --json > deploy-output.json || (cat deploy-output.json; exit 1)
+                    node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json
                 '''
             }
         }
