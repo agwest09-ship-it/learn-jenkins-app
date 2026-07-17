@@ -80,10 +80,11 @@ pipeline {
         stage('Deploy staging') {
             agent {
                 docker {
-                    image 'node:18-alpine'
+                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
                     reuseNode true
                 }
             }
+
             steps {
                 sh '''
                     npm install netlify-cli node-jq
@@ -91,28 +92,10 @@ pipeline {
                     echo "Site ID: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
                     node_modules/.bin/netlify deploy --dir=build --no-build --json > deploy-output.json || (cat deploy-output.json; exit 1)
-                '''
-                script {
-                    env.STAGING_URL = sh(script: "node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json", returnStdout: true)   
-                }
-            }
-        }
 
-        stage('E2E staging') {
-            agent {
-                docker {
-                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-                    reuseNode true
-                }
-            }
+                    CI_ENVIRONMENT_URL = $(node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json)
 
-            environment {
-                CI_ENVIRONMENT_URL = "${env.STAGING_URL}"
-            }
-
-            steps {
-                sh '''
-                    npx playwright test --reporter=html
+                     npx playwright test --reporter=html
                 '''
             }
 
@@ -123,8 +106,6 @@ pipeline {
 
             }
         }
-
-        
 
         stage('Approval') {
             steps {
@@ -145,22 +126,13 @@ pipeline {
             steps {
                 echo 'Deploy prod....'
             }
-/*
-            steps {
-                sh '''
-                    npm install netlify-cli
-                    node_modules/.bin/netlify --version
-                    echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
-                    node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --prod
-                '''
-            }
-*/
+
         }
 /*
-        stage('E2E prod') {
+        stage('Deploy prod') {
             agent {
                 docker {
+                    // playwright 이미지에 이미 node 이미지 기능이 포함됨 그래서 image node 환경을 playwright로 변경
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
                     reuseNode true
                 }
@@ -171,7 +143,15 @@ pipeline {
             }
 
             steps {
-                npx playwright test --reporter=html
+                sh '''
+                    npm install netlify-cli
+                    node_modules/.bin/netlify --version
+                    echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
+                    node_modules/.bin/netlify status
+                    node_modules/.bin/netlify deploy --dir=build --prod &
+                    sleep 10
+                    npx playwright test --reporter=html
+                '''
             }
 
             post {
@@ -181,7 +161,7 @@ pipeline {
 
             }
         }
-*/
+        */
 
 
     }
