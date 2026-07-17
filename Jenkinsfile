@@ -39,7 +39,7 @@ pipeline {
                 stage('E2E test') {
                     agent {
                         docker {
-                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            image 'mcr.microsoft.com/playwright:v1.61.0-jammy'
                             reuseNode true
                         }
                     }
@@ -84,7 +84,7 @@ pipeline {
         stage('Deploy prod') {
             agent {
                 docker {
-                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    image 'mcr.microsoft.com/playwright:v1.61.0-jammy'
                 }
             }
 
@@ -107,7 +107,7 @@ pipeline {
         stage('E2E prod') {
             agent {
                 docker {
-                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    image 'mcr.microsoft.com/playwright:v1.61.0-jammy'
                     reuseNode true
                 }
             }
