@@ -1,14 +1,14 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:18-alpine'
-            reuseNode true
-        }
-    }
-
     stages {
 
         stage('Build') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+
             steps {
                 sh '''
                     whoami
@@ -19,8 +19,17 @@ pipeline {
         }
 
         stage('Test') {
+
+
             parallel {
+
                 stage('Unit test') {
+                    agent {
+                        docker {
+                            image 'node:18-alpine'
+                            reuseNode true
+                        }
+                    }
                     
                     steps {
                         sh '''
@@ -62,6 +71,13 @@ pipeline {
         }
 
         stage('Deploy staging') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+
             steps {
                 sh '''
                     npm install netlify-cli node-jq
@@ -85,6 +101,7 @@ pipeline {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.61.0-jammy'
+                    reuseNode true
                 }
             }
 
