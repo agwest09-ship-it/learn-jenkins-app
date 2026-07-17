@@ -20,15 +20,9 @@ pipeline {
         }
 
         stage('Test') {
-            agent {
-                docker {
-                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-                    reuseNode true
-                }
-            }
-
             parallel {
                 stage('Unit test') {
+                    
                     steps {
                         sh '''
                             test -f build/index.html
@@ -44,6 +38,12 @@ pipeline {
                 }
 
                 stage('E2E test') {
+                    agent {
+                        docker {
+                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            reuseNode true
+                        }
+                    }
                     steps {
                         sh '''
                             npm install serve
