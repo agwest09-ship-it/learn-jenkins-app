@@ -2,7 +2,6 @@ pipeline {
     agent {
         docker {
             image 'node:18-alpine'
-            args '-v $HOME/.npm:/root/.npm'
             reuseNode true
         }
     }
@@ -32,7 +31,6 @@ pipeline {
 
                     post {
                         always {
-                            echo 'jest ===================='
                             junit 'jest-results/junit.xml'
                         }
                     }
@@ -45,6 +43,7 @@ pipeline {
                             reuseNode true
                         }
                     }
+
                     steps {
                         sh '''
                             npm install serve
