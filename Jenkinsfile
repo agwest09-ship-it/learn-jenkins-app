@@ -12,7 +12,7 @@ pipeline {
         stage('AWS') {
             agent {
                 docker {
-                    image 'amazon/aws-cli'  //default가 :latest이므로 cli 까지만 입력
+                    image 'amazon/aws-cli'
                     args "--entrypoint = ''"
                 }
             }
