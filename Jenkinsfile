@@ -27,7 +27,6 @@ pipeline {
 
             steps {
                 sh '''
-                    whoami
                     npm ci
                     npm run build
                 '''
@@ -36,9 +35,7 @@ pipeline {
 
         stage('Test') {
 
-
             parallel {
-
                 stage('Unit test') {
                     agent {
                         docker {
@@ -89,7 +86,7 @@ pipeline {
         stage('Deploy staging') {
             agent {
                 docker {
-                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    image 'my-playwright'
                     reuseNode true
                 }
             }
@@ -123,7 +120,7 @@ pipeline {
         stage('Deploy prod') {
             agent {
                 docker {
-                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    image 'my-playwright'
                     reuseNode true
                 }
             }
