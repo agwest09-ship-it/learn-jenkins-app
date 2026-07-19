@@ -21,7 +21,9 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                     sh '''
                         aws --version
-                        aws ecs register-task-definition --cli-input-json file://aws/task-definition-prod.json
+                        yum install jq -y   #yum : Linux operationg system that use the RPM Package Manager
+                        aws ecs register-task-definition --cli-input-json file://aws/task-definition-prod.json | jq '.'
+                        aws ecs update-service --cluster practice-fargateonly-cluster --service practice-fargateonly-cluster --task-definition learnJenkinsApp-TaskDefinition-Prod:2
                     '''
                 }
             }
