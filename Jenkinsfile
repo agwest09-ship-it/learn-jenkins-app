@@ -24,7 +24,7 @@ pipeline {
                         yum install jq -y
                         LATEST_TD_REVISION=$(aws ecs register-task-definition --cli-input-json file://aws/task-definition-prod.json | jq '.taskDefinition.revision')
                         echo $LATEST_TD_REVISION
-                        aws ecs update-service --cluster practice-fargateonly-cluster --service practice-fargateonly-cluster --task-definition learnJenkinsApp-TaskDefinition-Prod:2
+                        aws ecs update-service --cluster practice-fargateonly-cluster --service practice-fargateonly-cluster --task-definition learnJenkinsApp-TaskDefinition-Prod:$LATEST_TD_REVISION
                     '''
                 }
             }
