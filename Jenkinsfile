@@ -22,7 +22,7 @@ pipeline {
                     sh '''
                         aws --version
                         yum install jq -y   #yum : Linux operationg system that use the RPM Package Manager
-                        aws ecs register-task-definition --cli-input-json file://aws/task-definition-prod.json | jq '.'
+                        aws ecs register-task-definition --cli-input-json file://aws/task-definition-prod.json | jq '.taskDefinition.revision'
                         aws ecs update-service --cluster practice-fargateonly-cluster --service practice-fargateonly-cluster --task-definition learnJenkinsApp-TaskDefinition-Prod:2
                     '''
                 }
